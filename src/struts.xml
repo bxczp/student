@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<!-- 配置上传文件的最大值 -->
+	<constant name="struts.multipart.maxSize" value="20971520" />
+	<!-- 本Struts的版本默认是 开启动态方法调用的，不需要另外设置 -->
+	<package name="staudentInfo" extends="struts-default"
+		namespace="/">
+
+		<!-- 配置拦截器 -->
+		<interceptors>
+			<interceptor name="loginInterceptor" class="Interceptor.LoginInterceptor"></interceptor>
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="loginInterceptor"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+		<!-- 引用拦截器 -->
+		<default-interceptor-ref name="myStack"></default-interceptor-ref>
+
+		<!-- 定义全局的result -->
+		<global-results>
+			<result name="login">/login.jsp</result>
+		</global-results>
+
+		<global-exception-mappings>
+			<exception-mapping result="" exception=""></exception-mapping>
+		</global-exception-mappings>
+
+		<action name="user" class="Web.UserAction">
+			<!-- 默认都是转发 -->
+			<result name="error">/login.jsp</result>
+			<result name="success">/main.jsp</result>
+			<!-- 重定向 -->
+			<result name="logout" type="redirect">/login.jsp</result>
+			<!-- 该action使用默认的拦截器 其余都是用myStack拦截 -->
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+
+		<action name="dataDicType" class="Web.DataDicTypeAction">
+			<result name="success">/main.jsp</result>
+			<!-- action的重定向 -->
+			<result name="typeSave" type="redirectAction">dataDicType!list</result>
+		</action>
+
+		<action name="dataDic" class="Web.DataDicAction">
+			<result name="success">/main.jsp</result>
+			<!-- action的重定向 -->
+			<result name="dataSave" type="redirectAction">dataDic!list</result>
+		</action>
+
+		<action name="clazz" class="Web.ClazzAction">
+			<result name="success">/main.jsp</result>
+			<!-- action的重定向 -->
+			<result name="clazzSave" type="redirectAction">clazz!list</result>
+		</action>
+
+
+
+		<action name="grade" class="Web.GradeAction">
+			<result name="success">/main.jsp</result>
+			<result name="gradeSave" type="redirectAction">grade!list</result>
+		</action>
+
+
+		<action name="student" class="Web.StudentAction">
+			<result name="success">/main.jsp</result>
+			<result name="studentSave" type="redirectAction">student!list</result>
+
+			<interceptor-ref name="fileUpload">
+				<param name="allowedTypes">image/bmp,image/x-png,image/gif,image/jpg,image/jpeg</param>
+				<param name="maximumSize">2000000</param>
+			</interceptor-ref>
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+
+	</package>
+
+
+</struts>
